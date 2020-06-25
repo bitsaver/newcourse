@@ -1,7 +1,9 @@
 package pers.yang.newcourse.mapper;
 
-import pers.yang.newcourse.entity.Course;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import pers.yang.newcourse.entity.Course;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface CourseMapper extends BaseMapper<Course> {
 
+    List<Course> getEnrolled(Long id);
 }

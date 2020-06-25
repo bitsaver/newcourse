@@ -1,4 +1,4 @@
-package pers.yang.newcourse.config;
+package pers.yang.newcourse.config.shiro;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.shiro.authc.AuthenticationException;
@@ -6,15 +6,12 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import pers.yang.newcourse.config.jwt.JWTToken;
 import pers.yang.newcourse.entity.User;
 import pers.yang.newcourse.service.UserService;
-import pers.yang.newcourse.utils.JWTUtil;
-
-import java.util.List;
 
 public class UserRealm extends AuthorizingRealm {
 
@@ -34,7 +31,7 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-
+/*
         String username = JWTUtil.getUsername(principalCollection.toString());
 
         System.out.println("-------------------->"+username);
@@ -44,9 +41,10 @@ public class UserRealm extends AuthorizingRealm {
         // 5. 添加权限
         info.addRoles(nameList);
         //将数据库中的权限信息添加给用户
-       /* info.addStringPermission("user:add");*/
+    //info.addStringPermission("user:add");
 
-        return info;
+        return info;*/
+return null;
     }
 
     @Override

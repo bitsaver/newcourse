@@ -1,8 +1,8 @@
-package pers.yang.newcourse.config;
+package pers.yang.newcourse.config.jwt;
 
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
-import pers.yang.newcourse.exception.LoginException;
+import pers.yang.newcourse.exception.ErrorType;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -19,12 +19,11 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 executeLogin(request, response);
                 return true;
             } catch (Exception e) {
-                //token 错误
-                throw new LoginException("400111","未登录");
+                e.printStackTrace();
+                return false;
             }
         }
-        //如果请求头不存在 Token，则可能是执行登陆操作或者是游客状态访问，无需检查 token，直接返回 true
-        return true;
+        return false;
     }
 
     @Override
@@ -46,13 +45,13 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         String username = JWTUtil.getUsername(token);
         return username != null;
     }
-
+     */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         //throw new UnknownAccountException();
         response.setContentType("application/json;charset=utf-8");
-        response.getWriter().write("{\"code\":400123,\"message\":\"请先登录\"}");
+        response.getWriter().write("{\"code\":" + ErrorType.NO_LOGIN.getCode()
+                + ",\"msg\":\""+ ErrorType.NO_LOGIN.getMsg() +"\"}");
         return false;
     }
-     */
 }

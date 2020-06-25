@@ -1,8 +1,7 @@
 package pers.yang.newcourse.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.baomidou.mybatisplus.annotation.TableId;
+
 import java.io.Serializable;
 
 /**
@@ -17,7 +16,6 @@ public class CourseUser extends Model<CourseUser> {
 
     private static final long serialVersionUID=1L;
 
-    @TableId(value = "user_id", type = IdType.AUTO)
     private Long userId;
 
     private Long courseId;

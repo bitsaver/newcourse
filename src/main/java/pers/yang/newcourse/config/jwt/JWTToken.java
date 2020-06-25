@@ -1,4 +1,4 @@
-package pers.yang.newcourse.config;
+package pers.yang.newcourse.config.jwt;
 
 import org.apache.shiro.authc.AuthenticationToken;
 

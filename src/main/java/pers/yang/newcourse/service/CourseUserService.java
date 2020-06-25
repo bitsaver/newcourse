@@ -12,5 +12,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-06-13
  */
 public interface CourseUserService extends IService<CourseUser> {
+    Boolean quit(Long courseId);
 
+    Boolean enroll(CourseUser courseUser);
 }

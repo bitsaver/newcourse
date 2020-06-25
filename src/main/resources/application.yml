@@ -29,3 +29,5 @@ mybatis-plus:
   mapper-locations: classpath:pers/yang/newcourse/mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+    use-generated-keys: true

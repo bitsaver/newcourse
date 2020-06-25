@@ -16,4 +16,9 @@
         id, name, brief, img_url, state
     </sql>
 
+    <select id="getEnrolled" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from course_user
+        left join course on course_id = id where user_id = #{id};
+    </select>
 </mapper>

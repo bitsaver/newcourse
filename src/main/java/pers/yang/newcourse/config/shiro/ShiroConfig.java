@@ -1,14 +1,14 @@
-package pers.yang.newcourse.config;
+package pers.yang.newcourse.config.shiro;
 
-import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
-import org.apache.shiro.mgt.DefaultSubjectDAO;
-import org.apache.shiro.mgt.SubjectFactory;
+import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import pers.yang.newcourse.config.jwt.JwtFilter;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -31,6 +31,7 @@ public class ShiroConfig {
 
         //自定义拦截器
         Map<String, Filter> filterMap = new HashMap<String, Filter>();
+
         filterMap.put("jwt",new JwtFilter());
         filterMap.put("jwtroles",new RoleFilter());
         shiroFilterFactoryBean.setFilters(filterMap);
@@ -38,10 +39,10 @@ public class ShiroConfig {
         //过滤器规则
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         //anon | authc | user | perms[操作名] | role[角色名] |jwtroles[角色名]
-        filterChainDefinitionMap.put("/login","anon");
 
-        filterChainDefinitionMap.put("/newcourse/user/*","authc");
-//        filterChainDefinitionMap.put("/newcourse/user/*","jwtroles[admin]");
+        filterChainDefinitionMap.put("/newcourse/user/login","anon");
+
+        filterChainDefinitionMap.put("/newcourse/user/**","jwtroles[admin]");
 
         filterChainDefinitionMap.put("/logout", "logout");
 
@@ -51,24 +52,24 @@ public class ShiroConfig {
         return shiroFilterFactoryBean;
     }
 
-    @Bean
+  /*  @Bean
     public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
         DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
         advisorAutoProxyCreator.setProxyTargetClass(true);
         return advisorAutoProxyCreator;
-    }
+    }*/
 
     /**
      * 配置安全管理者，用于管理HTTP连接对象
      * @param
-     * @param subjectFactory
      * @return
      */
     @Bean(name= "defaultWebSecurityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("myRealm") MyRealm myRealm
-            ,@Qualifier("subjectFactory") SubjectFactory subjectFactory){
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("myRealm") MyRealm myRealm){
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
-
+        //设置Realm
+        defaultWebSecurityManager.setRealm(myRealm);
+/*
         //关闭session
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
         //1.配置默认Session存储为false
@@ -77,11 +78,7 @@ public class ShiroConfig {
         subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
         //2.交给securityManager进行管理
         defaultWebSecurityManager.setSubjectDAO(subjectDAO);
-        defaultWebSecurityManager.setSubjectFactory(subjectFactory);
-
-        //设置UserRealm
-        defaultWebSecurityManager.setRealm(myRealm);
-
+*/
         return defaultWebSecurityManager;
     }
 
@@ -91,10 +88,21 @@ public class ShiroConfig {
         return new MyRealm();
     }
 
-    //设置无状态session
-    @Bean(name = "subjectFactory")
-    public StatelessDefaultSubjectFactory subjectFactory(){
-        return new StatelessDefaultSubjectFactory();
+    @Bean
+    public SessionManager sessionManager(){
+        //将我们继承后重写的shiro session 注册
+        MySessionManager shiroSession = new MySessionManager();
+        //如果后续考虑多tomcat部署应用，可以使用shiro-redis开源插件来做session 的控制，或者nginx 的负载均衡
+        shiroSession.setSessionDAO(new EnterpriseCacheSessionDAO());
+        return shiroSession;
     }
 
+    //Shiro注解支持
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(@Qualifier("defaultWebSecurityManager") DefaultWebSecurityManager defaultWebSecurityManager) {
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor;
+        authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(defaultWebSecurityManager);
+        return authorizationAttributeSourceAdvisor;
+    }
 }

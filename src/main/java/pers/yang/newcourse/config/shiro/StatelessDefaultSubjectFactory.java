@@ -1,4 +1,4 @@
-package pers.yang.newcourse.config;
+package pers.yang.newcourse.config.shiro;
 
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.SubjectContext;

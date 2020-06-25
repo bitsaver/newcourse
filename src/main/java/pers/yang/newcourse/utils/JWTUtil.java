@@ -5,7 +5,6 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import pers.yang.newcourse.exception.UnauthorizedException;
 
 import java.util.Date;
 
@@ -14,17 +13,11 @@ public class JWTUtil {
     // 过期时间5分钟
     private static final long EXPIRE_TIME = 60*60*1000;
 
-    /**
-     * 校验token是否正确
-     * @param token 密钥
-     * @param secret 用户的密码
-     * @return 是否正确
-     */
-    public static boolean verify(String token, String username, String secret) {
+    public static boolean verify(String token, Long id, String secret) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withClaim("username", username)
+                    .withClaim("id",id)
                     .build();
             DecodedJWT jwt = verifier.verify(token);
             return true;
@@ -33,23 +26,19 @@ public class JWTUtil {
         }
     }
 
-    /**
-     * 获得token中的信息无需secret解密也能获得
-     * @return token中包含的用户名
-     */
-    public static String getUsername(String token) {
+
+    public static Long getUserId(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
-            return jwt.getClaim("username").asString();
+            return jwt.getClaim("id").asLong();
         } catch (JWTDecodeException e) {
+            return null;
+        } catch (NullPointerException e){
             return null;
         }
     }
 
-    /**
-     * 获得token中的信息无需secret解密也能获得
-     * @return token中包含的用户名
-     */
+
     public static String getPassword(String token) {
         try {
             DecodedJWT jwt = JWT.decode(token);
@@ -61,20 +50,19 @@ public class JWTUtil {
 
     /**
      * 生成签名,5min后过期
-     * @param username 用户名
      * @param secret 用户的密码
      * @return 加密的token
      */
-    public static String sign(String username, String secret) {
+    public static String sign(Long id, String secret) {
         try {
             Date date = new Date(System.currentTimeMillis()+EXPIRE_TIME);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             // 附带username信息
             return JWT.create()
-                    .withClaim("username", username)
+                    .withClaim("id", id)
                     .withExpiresAt(date)
                     .sign(algorithm);
-        } catch (UnauthorizedException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -83,9 +71,9 @@ public class JWTUtil {
         /**
          * 测试生成一个token
          */
-        String sign = sign("yang", "123456");
+        String sign = sign(123456L, "123456");
         System.out.println(sign);
-        String username = getUsername("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTI1MjI5MDMsInVzZXJuYW1lIjoieWFuZyJ9.Ia8Axyv7o5k-5VxdDpXsZxTO6kWc8dAsrA3hokK9udY");
+        String username = getPassword("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTI5MDM1OTQsInVzZXJuYW1lIjoieWFuZyJ9.GJrE5z_bq1KZVmAD2fHidThw3zL_UYGXPgNfmuxDhO0");
         System.out.println(username);
 
     }

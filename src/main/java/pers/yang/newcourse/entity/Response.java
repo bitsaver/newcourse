@@ -1,6 +1,6 @@
 package pers.yang.newcourse.entity;
 
-public class ResponseBean {
+public class Response {
     
     // http 状态码
     private int code;
@@ -11,10 +11,20 @@ public class ResponseBean {
     // 返回的数据
     private Object data;
 
-    public ResponseBean(int code, String msg, Object data) {
+    public Response() {
+    }
+    public Response(int code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
+    }
+
+    public static Response success(String message) {
+        Response response = new Response();
+        response.setData(null);
+        response.setCode(200);
+        response.setMsg(message);
+        return response;
     }
 
     public int getCode() {

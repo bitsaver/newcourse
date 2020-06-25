@@ -3,6 +3,8 @@ package pers.yang.newcourse.service;
 import pers.yang.newcourse.entity.Course;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CourseService extends IService<Course> {
 
+    List<Course> search(String name);
+
+    void add(Course course);
+
+    List<Course> getEnrolled();
 }
