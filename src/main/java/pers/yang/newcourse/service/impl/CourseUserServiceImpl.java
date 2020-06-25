@@ -3,6 +3,7 @@ package pers.yang.newcourse.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pers.yang.newcourse.entity.CourseUser;
@@ -35,9 +36,10 @@ public class CourseUserServiceImpl extends ServiceImpl<CourseUserMapper, CourseU
             delete = courseUserMapper.delete(new QueryWrapper<CourseUser>()
                     .eq("user_id", userId)
                     .eq("course_id", courseId));
+            Assert.isTrue(delete==1);
         } catch (Exception e) {
             System.err.println(e);
-            throw new CustomException(ErrorType.ALREADY_ENROLLED);
+            throw new CustomException(ErrorType.ALREADY_QUIT);
         }
 
         return true;

@@ -7,7 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @MapperScan(basePackages = "pers.yang.newcourse.mapper")
 public class NewcourseApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(NewcourseApplication.class, args);
     }
+
 }

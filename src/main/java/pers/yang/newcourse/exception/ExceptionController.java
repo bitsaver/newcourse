@@ -19,6 +19,7 @@ public class ExceptionController {
     @ExceptionHandler(value =RuntimeException.class)
     @ResponseBody
     public Response exceptionHandler(HttpServletRequest req, Exception e){
+        e.printStackTrace();
 
         return ResponseUtils.error(500,"操作失败！");
     }

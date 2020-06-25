@@ -3,6 +3,8 @@ package pers.yang.newcourse.service;
 import pers.yang.newcourse.entity.Quiz;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface QuizService extends IService<Quiz> {
 
+    List<Quiz> getList(Long courseId);
 }

@@ -21,6 +21,7 @@ spring:
         url-pattern: /druid/*
 
 
+
 #项目配置
 server:
   port: 80

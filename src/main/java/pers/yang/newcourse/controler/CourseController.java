@@ -55,15 +55,7 @@ public class CourseController {
         return ResponseUtils.success(courseList);
     }
 
-    /**
-     *
-     * @return
-     */
-    @GetMapping("/demo")
-    public Response demo(){
-        courseService.list();
-        return ResponseUtils.success();
-    }
+
 
 }
 

@@ -12,7 +12,6 @@ public enum  ErrorType {
 
 
 
-
     private int code;
 
     private String msg;

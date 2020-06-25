@@ -42,8 +42,8 @@ public class ShiroConfig {
 
         filterChainDefinitionMap.put("/newcourse/user/login","anon");
 
-        filterChainDefinitionMap.put("/newcourse/user/**","jwtroles[admin]");
-
+        filterChainDefinitionMap.put("/newcourse/user/*", "jwtroles[admin]");
+        filterChainDefinitionMap.put("/newcourse/course/add","jwtroles[teacher]");
         filterChainDefinitionMap.put("/logout", "logout");
 
         filterChainDefinitionMap.put("/**", "jwt");

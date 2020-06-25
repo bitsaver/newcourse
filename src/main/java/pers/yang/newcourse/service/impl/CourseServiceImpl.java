@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pers.yang.newcourse.entity.Course;
 import pers.yang.newcourse.entity.CourseUser;
 import pers.yang.newcourse.mapper.CourseMapper;
@@ -23,7 +22,6 @@ import java.util.List;
  * @author Yang Zhenman
  * @since 2020-06-13
  */
-@Transactional
 @Service
 public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> implements CourseService {
 

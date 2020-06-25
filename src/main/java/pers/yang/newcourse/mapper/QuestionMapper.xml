@@ -17,4 +17,8 @@
         id, name, content, user_id, score, type
     </sql>
 
+    <select id="getQustionByCourseId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from 
+    </select>
+
 </mapper>
