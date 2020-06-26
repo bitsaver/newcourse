@@ -1,5 +1,6 @@
 package pers.yang.newcourse.service;
 
+import pers.yang.newcourse.bo.BoQuestion;
 import pers.yang.newcourse.entity.Question;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -15,6 +16,11 @@ import java.util.List;
  */
 public interface QuestionService extends IService<Question> {
 
-    List<Question> getList(Long courseId);
+    List<BoQuestion> integrity(Long courseId);
 
+    List<BoQuestion> get();
+
+    List<BoQuestion> add(List<BoQuestion> boQuestionList);
+
+    Boolean del(Long question_id);
 }

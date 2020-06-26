@@ -38,7 +38,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
 
     @Override
-    public void add(Course course) {
+    public Course add(Course course) {
         Long id = JWTUtil.getUserId(SecurityUtils.getSubject().getPrincipal().toString());
         System.out.println("userID=" + id + "===================> course" + course);
         courseMapper.insert(course);
@@ -46,6 +46,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         courseUser.setCourseId(course.getId());
         courseUser.setUserId(id);
         courseUserMapper.insert(courseUser);
+        return course;
     }
 
     @Override

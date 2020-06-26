@@ -5,6 +5,7 @@ import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pers.yang.newcourse.bo.BoUser;
 import pers.yang.newcourse.config.jwt.JWTToken;
 import pers.yang.newcourse.entity.User;
 import pers.yang.newcourse.mapper.UserMapper;
@@ -40,5 +41,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         JWTToken jwtToken = new JWTToken(token);
         SecurityUtils.getSubject().login(jwtToken);
         return token;
+    }
+
+    @Override
+    public List<BoUser> get() {
+        return null;
+    }
+
+    @Override
+    public Boolean add(List<BoUser> boUserList) {
+
+        return null;
+    }
+
+    @Override
+    public BoUser edit(BoUser boUser) {
+        return null;
     }
 }

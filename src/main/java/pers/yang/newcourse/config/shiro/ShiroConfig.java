@@ -1,14 +1,15 @@
 package pers.yang.newcourse.config.shiro;
 
 import org.apache.shiro.session.mgt.SessionManager;
-import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import pers.yang.newcourse.config.jwt.JwtFilter;
+import pers.yang.newcourse.config.jwt.RoleFilter;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -42,8 +43,12 @@ public class ShiroConfig {
 
         filterChainDefinitionMap.put("/newcourse/user/login","anon");
 
-        filterChainDefinitionMap.put("/newcourse/user/*", "jwtroles[admin]");
+        //测试，登录即可访问
+        filterChainDefinitionMap.put("/**", "jwt");
+
+        filterChainDefinitionMap.put("/newcourse/user/**", "jwtroles[admin]");
         filterChainDefinitionMap.put("/newcourse/course/add","jwtroles[teacher]");
+        filterChainDefinitionMap.put("/newcourse/question/**","jwtroles[teacher]");
         filterChainDefinitionMap.put("/logout", "logout");
 
         filterChainDefinitionMap.put("/**", "jwt");
@@ -52,12 +57,6 @@ public class ShiroConfig {
         return shiroFilterFactoryBean;
     }
 
-  /*  @Bean
-    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
-        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        advisorAutoProxyCreator.setProxyTargetClass(true);
-        return advisorAutoProxyCreator;
-    }*/
 
     /**
      * 配置安全管理者，用于管理HTTP连接对象
@@ -65,20 +64,11 @@ public class ShiroConfig {
      * @return
      */
     @Bean(name= "defaultWebSecurityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("myRealm") MyRealm myRealm){
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("myRealm") MyRealm myRealm,@Qualifier("mySessionManager") SessionManager sessionManager){
         DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
         //设置Realm
         defaultWebSecurityManager.setRealm(myRealm);
-/*
-        //关闭session
-        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
-        //1.配置默认Session存储为false
-        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
-        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
-        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
-        //2.交给securityManager进行管理
-        defaultWebSecurityManager.setSubjectDAO(subjectDAO);
-*/
+        defaultWebSecurityManager.setSessionManager(sessionManager);
         return defaultWebSecurityManager;
     }
 
@@ -88,13 +78,13 @@ public class ShiroConfig {
         return new MyRealm();
     }
 
-    @Bean
+    @Bean(name = "mySessionManager")
     public SessionManager sessionManager(){
         //将我们继承后重写的shiro session 注册
-        MySessionManager shiroSession = new MySessionManager();
+        MySessionManager mySessionManager = new MySessionManager();
         //如果后续考虑多tomcat部署应用，可以使用shiro-redis开源插件来做session 的控制，或者nginx 的负载均衡
-        shiroSession.setSessionDAO(new EnterpriseCacheSessionDAO());
-        return shiroSession;
+//        mySessionManager.setSessionDAO(new EnterpriseCacheSessionDAO());
+        return mySessionManager;
     }
 
     //Shiro注解支持
@@ -104,5 +94,12 @@ public class ShiroConfig {
         authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
         authorizationAttributeSourceAdvisor.setSecurityManager(defaultWebSecurityManager);
         return authorizationAttributeSourceAdvisor;
+    }
+
+    @Bean
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        advisorAutoProxyCreator.setProxyTargetClass(true);
+        return advisorAutoProxyCreator;
     }
 }

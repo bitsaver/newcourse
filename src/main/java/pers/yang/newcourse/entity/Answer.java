@@ -12,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author Yang Zhenman
- * @since 2020-06-13
+ * @since 2020-06-26
  */
 @TableName("q_answer")
 public class Answer extends Model<Answer> {
@@ -22,7 +22,7 @@ public class Answer extends Model<Answer> {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private Integer questionId;
+    private Long questionId;
 
     private String answer;
 
@@ -35,11 +35,11 @@ public class Answer extends Model<Answer> {
         this.id = id;
     }
 
-    public Integer getQuestionId() {
+    public Long getQuestionId() {
         return questionId;
     }
 
-    public void setQuestionId(Integer questionId) {
+    public void setQuestionId(Long questionId) {
         this.questionId = questionId;
     }
 

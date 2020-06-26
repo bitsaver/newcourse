@@ -1,8 +1,8 @@
-package pers.yang.newcourse.config.shiro;
+package pers.yang.newcourse.config.jwt;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.util.CollectionUtils;
-import org.apache.shiro.web.filter.AccessControlFilter;
+import org.apache.shiro.web.filter.authz.AuthorizationFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Set;
 
 @Configuration
-public class RoleFilter extends AccessControlFilter {
+public class RoleFilter extends AuthorizationFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) throws Exception {
@@ -38,8 +38,8 @@ public class RoleFilter extends AccessControlFilter {
             Set<String> roles = CollectionUtils.asSet(rolesArray);
             boolean flag = false;
             for (String item : roles) {
-                System.out.println("isAA()===========================>"+ SecurityUtils.getSubject().hasRole(item));
-                if (SecurityUtils.getSubject().hasRole(item)) {
+                System.out.println(item+"才可以访问======================>"+SecurityUtils.getSubject().getSession().getId()+ SecurityUtils.getSubject().hasRole(item));
+                if (getSubject(servletRequest,servletResponse).hasRole(item)) {
                     flag = true;
                 }
             }

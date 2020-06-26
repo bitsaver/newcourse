@@ -17,8 +17,12 @@
         id, name, content, user_id, score, type
     </sql>
 
-    <select id="getQustionByCourseId" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select <include refid="Base_Column_List"/> from 
+    <select id="getQustionByQuizId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from question
+        left join quiz_question
+        on id = quiz_id
+        and question_id = #{quizId}
     </select>
 
 </mapper>

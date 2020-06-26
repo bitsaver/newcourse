@@ -26,7 +26,7 @@ public class QuizController {
     private QuizService quizService;
 
     /**
-     *  添加试卷
+     *  添加一张空白的试卷，设置试卷的属性，属性包括名称、试卷所属课程、起止时间
      * @return
      */
     @PostMapping("/add")
@@ -36,7 +36,7 @@ public class QuizController {
     }
 
     /**
-     *  修改试卷
+     *  修改试卷的属性，属性包括名称、试卷所属课程、起止时间
      * @return
      */
     @PutMapping("/edit")
@@ -46,7 +46,7 @@ public class QuizController {
     }
 
     /**
-     *  修改试卷
+     *  删除试卷，但其中的题目将会被保留
      * @return
      */
     @DeleteMapping("/del")
@@ -56,7 +56,7 @@ public class QuizController {
     }
 
     /**
-     * 试卷列表
+     * 列出courseId课程中的所有试卷
      * @return
      */
     @GetMapping("/list")

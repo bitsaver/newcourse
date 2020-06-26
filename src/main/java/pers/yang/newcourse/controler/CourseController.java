@@ -42,8 +42,8 @@ public class CourseController {
      */
     @PostMapping("/add")
     public Response add(@RequestBody Course course){
-        courseService.add(course);
-        return ResponseUtils.success();
+        course = courseService.add(course);
+        return ResponseUtils.success(course);
     }
 
     /** 获取已参加的课程
@@ -54,8 +54,6 @@ public class CourseController {
         List<Course> courseList = courseService.getEnrolled();
         return ResponseUtils.success(courseList);
     }
-
-
 
 }
 

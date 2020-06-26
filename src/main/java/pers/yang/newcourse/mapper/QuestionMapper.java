@@ -1,5 +1,6 @@
 package pers.yang.newcourse.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import pers.yang.newcourse.entity.Question;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -15,6 +16,6 @@ import java.util.List;
  */
 public interface QuestionMapper extends BaseMapper<Question> {
 
-    List<Question> getQustionByCourseId(Long courseId);
+    List<Question> getQustionByQuizId(@Param("quizId") Long quizId);
 
 }

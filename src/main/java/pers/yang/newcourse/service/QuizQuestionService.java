@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface QuizQuestionService extends IService<QuizQuestion> {
 
+    void del(QuizQuestion quizQuestion);
 }

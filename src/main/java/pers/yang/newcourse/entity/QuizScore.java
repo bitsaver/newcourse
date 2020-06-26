@@ -11,7 +11,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author Yang Zhenman
- * @since 2020-06-13
+ * @since 2020-06-26
  */
 public class QuizScore extends Model<QuizScore> {
 
@@ -20,7 +20,7 @@ public class QuizScore extends Model<QuizScore> {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    private Long studentId;
+    private Long userId;
 
     private Long quizId;
 
@@ -37,12 +37,12 @@ public class QuizScore extends Model<QuizScore> {
         this.id = id;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getQuizId() {
@@ -78,7 +78,7 @@ public class QuizScore extends Model<QuizScore> {
     public String toString() {
         return "QuizScore{" +
         "id=" + id +
-        ", studentId=" + studentId +
+        ", userId=" + userId +
         ", quizId=" + quizId +
         ", score=" + score +
         ", times=" + times +

@@ -17,7 +17,7 @@ public interface CourseService extends IService<Course> {
 
     List<Course> search(String name);
 
-    void add(Course course);
+    Course add(Course course);
 
     List<Course> getEnrolled();
 }

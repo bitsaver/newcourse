@@ -40,7 +40,9 @@ public class MyRealm extends AuthorizingRealm {
         Long id = JWTUtil.getUserId(principals.toString());
         List<String> roleList = userService.getRoleListByUserId(id);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+        System.out.println("授予权限" + roleList.toString());
         simpleAuthorizationInfo.addRoles(roleList);
+
 //        simpleAuthorizationInfo.addStringPermissions(permission);
         return simpleAuthorizationInfo;
     }

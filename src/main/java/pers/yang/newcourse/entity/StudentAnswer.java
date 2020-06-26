@@ -12,7 +12,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author Yang Zhenman
- * @since 2020-06-13
+ * @since 2020-06-26
  */
 @TableName("q_student_answer")
 public class StudentAnswer extends Model<StudentAnswer> {
@@ -24,7 +24,7 @@ public class StudentAnswer extends Model<StudentAnswer> {
 
     private Long userId;
 
-    private Long testpaperId;
+    private Long quizId;
 
     private Long questionId;
 
@@ -47,12 +47,12 @@ public class StudentAnswer extends Model<StudentAnswer> {
         this.userId = userId;
     }
 
-    public Long getTestpaperId() {
-        return testpaperId;
+    public Long getQuizId() {
+        return quizId;
     }
 
-    public void setTestpaperId(Long testpaperId) {
-        this.testpaperId = testpaperId;
+    public void setQuizId(Long quizId) {
+        this.quizId = quizId;
     }
 
     public Long getQuestionId() {
@@ -81,7 +81,7 @@ public class StudentAnswer extends Model<StudentAnswer> {
         return "StudentAnswer{" +
         "id=" + id +
         ", userId=" + userId +
-        ", testpaperId=" + testpaperId +
+        ", quizId=" + quizId +
         ", questionId=" + questionId +
         ", answer=" + answer +
         "}";
