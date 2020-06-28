@@ -73,8 +73,8 @@ public class QuestionController {
      * @return 成功或错误原因
      */
     @GetMapping("/integrity")
-    public Response integrity(Long courseId){
-        List<BoQuestion> questionList = questionService.integrity(courseId);
+    public Response integrity(Long quizId){
+        List<BoQuestion> questionList = questionService.integrity(quizId);
         return ResponseUtils.success(questionList);
     }
 

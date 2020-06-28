@@ -10,9 +10,9 @@ import pers.yang.newcourse.bo.BoQuestion;
 import pers.yang.newcourse.entity.*;
 import pers.yang.newcourse.mapper.*;
 import pers.yang.newcourse.service.QuestionService;
-import pers.yang.newcourse.utils.JWTUtil;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * <p>
@@ -54,7 +54,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
 
         List<Question> questionList = questionMapper.getQustionByQuizId(quizId);
 
-        Long userId = JWTUtil.getUserId(SecurityUtils.getSubject().getPrincipal().toString());
+        Long userId = (Long)SecurityUtils.getSubject().getPrincipal();
         return getQuestionList(boQuestionList, questionList, userId,quizId);
     }
 
@@ -66,14 +66,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     public List<BoQuestion> get() {
         List<BoQuestion> boQuestionList = new LinkedList<>();
 
-        Long userId = JWTUtil.getUserId(SecurityUtils.getSubject().getPrincipal().toString());
+        Long userId = (Long)SecurityUtils.getSubject().getPrincipal();
         List<Question> questionList = questionMapper.selectList(new QueryWrapper<Question>().eq("user_id", userId));
         return getQuestionList(boQuestionList, questionList,userId,null);
     }
 
     @Override
     public List<BoQuestion> add(List<BoQuestion> boQuestionList) {
-        Long userId = JWTUtil.getUserId(SecurityUtils.getSubject().getPrincipal().toString());
+        Long userId = (Long)SecurityUtils.getSubject().getPrincipal();
         for (BoQuestion boQuestion : boQuestionList) {
             boQuestion.getQuestion().insert();
             boQuestion.getQuestion().setUserId(userId);
@@ -106,7 +106,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
     }
 
     private Long userId(){
-        return JWTUtil.getUserId(SecurityUtils.getSubject().getPrincipal().toString());
+        return (Long)SecurityUtils.getSubject().getPrincipal();
     }
 
     private List<BoQuestion> getQuestionList(List<BoQuestion> boQuestionList, List<Question> questionList,Long userId,Long quizId) {

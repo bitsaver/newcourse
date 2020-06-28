@@ -1,6 +1,7 @@
 package pers.yang.newcourse.config.shiro;
 
-import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -8,8 +9,8 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pers.yang.newcourse.config.jwt.JwtFilter;
-import pers.yang.newcourse.config.jwt.RoleFilter;
+import pers.yang.newcourse.config.jwt.JWTAuthcFilter;
+import pers.yang.newcourse.config.jwt.JWTRoleFilter;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -33,8 +34,9 @@ public class ShiroConfig {
         //自定义拦截器
         Map<String, Filter> filterMap = new HashMap<String, Filter>();
 
-        filterMap.put("jwt",new JwtFilter());
-        filterMap.put("jwtroles",new RoleFilter());
+        filterMap.put("jwtAuth",new JWTAuthcFilter());
+        filterMap.put("jwtRole",new JWTRoleFilter());
+
         shiroFilterFactoryBean.setFilters(filterMap);
 
         //过滤器规则
@@ -43,15 +45,12 @@ public class ShiroConfig {
 
         filterChainDefinitionMap.put("/newcourse/user/login","anon");
 
-        //测试，登录即可访问
-        filterChainDefinitionMap.put("/**", "jwt");
-
-        filterChainDefinitionMap.put("/newcourse/user/**", "jwtroles[admin]");
-        filterChainDefinitionMap.put("/newcourse/course/add","jwtroles[teacher]");
-        filterChainDefinitionMap.put("/newcourse/question/**","jwtroles[teacher]");
+        filterChainDefinitionMap.put("/newcourse/user/**", "jwtRole[admin]");
+        filterChainDefinitionMap.put("/newcourse/course/add","jwtRole[teacher]");
+        filterChainDefinitionMap.put("/newcourse/question/**","jwtRole[teacher]");
         filterChainDefinitionMap.put("/logout", "logout");
 
-        filterChainDefinitionMap.put("/**", "jwt");
+        filterChainDefinitionMap.put("/**", "jwtAuth");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;
@@ -64,27 +63,25 @@ public class ShiroConfig {
      * @return
      */
     @Bean(name= "defaultWebSecurityManager")
-    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("myRealm") MyRealm myRealm,@Qualifier("mySessionManager") SessionManager sessionManager){
-        DefaultWebSecurityManager defaultWebSecurityManager = new DefaultWebSecurityManager();
+    public DefaultWebSecurityManager getDefaultWebSecurityManager(@Qualifier("myRealm") MyRealm myRealm){
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         //设置Realm
-        defaultWebSecurityManager.setRealm(myRealm);
-        defaultWebSecurityManager.setSessionManager(sessionManager);
-        return defaultWebSecurityManager;
+        securityManager.setRealm(myRealm);
+
+        // http://shiro.apache.org/session-management.html#SessionManagement-StatelessApplications%28Sessionless%29
+        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+        securityManager.setSubjectDAO(subjectDAO);
+
+        return securityManager;
     }
 
     //将认证和授权操作注入Spring容器中
     @Bean(name = "myRealm")
     public MyRealm myRealm(){
         return new MyRealm();
-    }
-
-    @Bean(name = "mySessionManager")
-    public SessionManager sessionManager(){
-        //将我们继承后重写的shiro session 注册
-        MySessionManager mySessionManager = new MySessionManager();
-        //如果后续考虑多tomcat部署应用，可以使用shiro-redis开源插件来做session 的控制，或者nginx 的负载均衡
-//        mySessionManager.setSessionDAO(new EnterpriseCacheSessionDAO());
-        return mySessionManager;
     }
 
     //Shiro注解支持

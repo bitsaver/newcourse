@@ -32,7 +32,7 @@ public class QuizController {
     @PostMapping("/add")
     public Response add(@RequestBody Quiz quiz){
         quizService.save(quiz);
-        return ResponseUtils.success();
+        return ResponseUtils.success(quiz);
     }
 
     /**

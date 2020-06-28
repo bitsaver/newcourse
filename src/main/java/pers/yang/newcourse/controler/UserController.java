@@ -32,7 +32,7 @@ public class UserController {
      * @return token
      */
     @PostMapping("/login")
-    public Response login(@RequestBody User user){
+        public Response login(@RequestBody User user) {
         String token = userService.login(user);
         return ResponseUtils.success(token);
     }
@@ -42,9 +42,9 @@ public class UserController {
      * @return
      */
     @GetMapping("/get")
-    public Response get(){
-        List<BoUser> boUserList = userService.get();
-        return ResponseUtils.success();
+    public Response get(@RequestBody User user)  {
+        List<BoUser> boUserList = userService.get(user.getName());
+        return ResponseUtils.success(boUserList);
     }
 
     /**
@@ -62,7 +62,7 @@ public class UserController {
      *
      */
     @PutMapping("/edit")
-    public Response edit(@RequestBody BoUser boUser){
+    public Response edit(@RequestBody BoUser boUser)  {
         userService.edit(boUser);
         return ResponseUtils.success();
     }

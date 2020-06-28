@@ -10,19 +10,19 @@ import java.util.Date;
 
 public class JWTUtil {
 
-    // 过期时间5分钟
-    private static final long EXPIRE_TIME = 60*60*1000;
+    // 过期时间30分钟
+    private static final long EXPIRE_TIME = 30*60*1000;
 
-    public static boolean verify(String token, Long id, String secret) {
+    public static DecodedJWT verify(String token, Long id, String secret) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withClaim("id",id)
                     .build();
             DecodedJWT jwt = verifier.verify(token);
-            return true;
+            return jwt;
         } catch (Exception exception) {
-            return false;
+            return null;
         }
     }
 

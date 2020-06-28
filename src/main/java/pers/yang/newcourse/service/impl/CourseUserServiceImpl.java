@@ -11,7 +11,6 @@ import pers.yang.newcourse.exception.CustomException;
 import pers.yang.newcourse.exception.ErrorType;
 import pers.yang.newcourse.mapper.CourseUserMapper;
 import pers.yang.newcourse.service.CourseUserService;
-import pers.yang.newcourse.utils.JWTUtil;
 
 /**
  * <p>
@@ -30,7 +29,7 @@ public class CourseUserServiceImpl extends ServiceImpl<CourseUserMapper, CourseU
 
     @Override
     public Boolean quit(Long courseId) {
-        Long userId = JWTUtil.getUserId(SecurityUtils.getSubject().getPrincipal().toString());
+        Long userId = (Long)SecurityUtils.getSubject().getPrincipal();
         int delete;
         try {
             delete = courseUserMapper.delete(new QueryWrapper<CourseUser>()
@@ -47,7 +46,7 @@ public class CourseUserServiceImpl extends ServiceImpl<CourseUserMapper, CourseU
 
     @Override
     public Boolean enroll(CourseUser courseUser) {
-        Long userId = JWTUtil.getUserId(SecurityUtils.getSubject().getPrincipal().toString());
+        Long userId = (Long)SecurityUtils.getSubject().getPrincipal();
         courseUser.setUserId(userId);
         try {
             courseUserMapper.insert(courseUser);

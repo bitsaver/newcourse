@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface QuestionService extends IService<Question> {
 
-    List<BoQuestion> integrity(Long courseId);
+    List<BoQuestion> integrity(Long quizId);
 
     List<BoQuestion> get();
 

@@ -1,6 +1,7 @@
 package pers.yang.newcourse.config.shiro;
 
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -37,7 +38,7 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         System.out.println("执行 doGetAuthorizationInfo()方法" + principals.getPrimaryPrincipal());
-        Long id = JWTUtil.getUserId(principals.toString());
+        Long id = (Long) principals.getPrimaryPrincipal();
         List<String> roleList = userService.getRoleListByUserId(id);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         System.out.println("授予权限" + roleList.toString());
@@ -51,19 +52,26 @@ public class MyRealm extends AuthorizingRealm {
      * 默认使用此方法进行用户名正确与否验证，错误抛出异常即可。
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws RuntimeException{
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws CustomException{
         String token = authenticationToken.getPrincipal().toString();
 
-        User user = new User();
-        user.setId(JWTUtil.getUserId(token));
-        user = user.selectById();
+        Long userId = JWTUtil.getUserId(token);
+        if(userId==null){
+            throw new CustomException(ErrorType.INVALID_REQUEST);
+        }
 
-        if (!JWTUtil.verify(token,user.getId(),user.getPassword())) {
+        User user = new User();
+        user.setId(userId);
+        user = user.selectById();
+        if(user==null){
+            throw new CustomException((ErrorType.ID_INCORRECT));
+        }
+
+        DecodedJWT verify = JWTUtil.verify(token, user.getId(), user.getPassword());
+        if (verify==null) {
             throw new CustomException(ErrorType.PASSWORD_INCORRECT);
         }
 
-        this.setCachingEnabled(true);
-
-        return new SimpleAuthenticationInfo(token, token, "my_realm");
+        return new SimpleAuthenticationInfo(user.getId(), token, "my_realm");
     }
 }

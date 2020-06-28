@@ -10,7 +10,6 @@ import pers.yang.newcourse.entity.CourseUser;
 import pers.yang.newcourse.mapper.CourseMapper;
 import pers.yang.newcourse.mapper.CourseUserMapper;
 import pers.yang.newcourse.service.CourseService;
-import pers.yang.newcourse.utils.JWTUtil;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public Course add(Course course) {
-        Long id = JWTUtil.getUserId(SecurityUtils.getSubject().getPrincipal().toString());
+        Long id = (Long)SecurityUtils.getSubject().getPrincipal();
         System.out.println("userID=" + id + "===================> course" + course);
         courseMapper.insert(course);
         CourseUser courseUser = new CourseUser();
@@ -51,7 +50,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public List<Course> getEnrolled() {
-        Long id = JWTUtil.getUserId(SecurityUtils.getSubject().getPrincipal().toString());
+        Long id = (Long)SecurityUtils.getSubject().getPrincipal();
         return courseMapper.getEnrolled(id);
     }
 

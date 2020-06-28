@@ -1,6 +1,11 @@
 package pers.yang.newcourse.entity;
 
-public class Response {
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+public class Response implements Serializable {
     
     // http 状态码
     private int code;
@@ -9,45 +14,6 @@ public class Response {
     private String msg;
 
     // 返回的数据
-    private Object data;
+    public Object data;
 
-    public Response() {
-    }
-    public Response(int code, String msg, Object data) {
-        this.code = code;
-        this.msg = msg;
-        this.data = data;
-    }
-
-    public static Response success(String message) {
-        Response response = new Response();
-        response.setData(null);
-        response.setCode(200);
-        response.setMsg(message);
-        return response;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
 }
